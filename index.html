@@ -193,10 +193,10 @@
   var DEFAULT = {
     pfand: 2,
     items: [
-      {name:"Kinderpunsch", price:3, pfand:true},
-      {name:"Limo, Mineral", price:3, pfand:true},
-      {name:"Glühwein", price:4, pfand:true},
+      {name:"Glühwein", price:4.5, pfand:true},
       {name:"Bier", price:4, pfand:true},
+      {name:"Kinderpunsch", price:3, pfand:true},
+      {name:"Saft/Eistee, Mineral", price:3, pfand:true},
       {name:"Wein gespritzt", price:4, pfand:true},
       {name:"1/8 Wein rot oder weiß", price:4, pfand:true}
     ]
@@ -289,7 +289,7 @@
       var k = Math.floor(cents / (n * 100));
       if (k){ parts.push(k + "× " + n + " €"); cents -= k * n * 100; }
     });
-    if (cents) parts.push((parts.length ? "+ " : "") + eur(cents / 100) + " Münzen");
+    if (cents) parts.push(eur(cents / 100) + " Münzen");
     return parts.join("  ·  ");
   }
 
