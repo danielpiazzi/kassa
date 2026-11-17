@@ -51,6 +51,8 @@
   .head img{height:50px;width:auto;margin-right:12px}
   .head .ttl{font-size:22px;font-weight:700;line-height:1.15}
   .head .ttl small{font-size:17px;font-weight:400;color:var(--muted)}
+  /* Versionsnummer: bei jeder Änderung hochzählen, damit man am Gerät sieht, ob es aktuell ist */
+  .head .ver{font-size:12px;color:#b5aca2;margin-left:6px}
   .sum{background:var(--panel);border-radius:14px;padding:10px 14px}
   .row{display:flex;justify-content:space-between;font-size:19px;color:var(--muted);padding:1px 0}
   .total{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--line);
@@ -112,50 +114,51 @@
     padding:12px 22px;border-radius:12px;font-size:20px;font-weight:700;opacity:0;transition:opacity .25s;pointer-events:none;z-index:20}
   .toast.show{opacity:1}
 
-  /* Größere Tablets (iPad, Surface Go): alles größer, damit der Platz genutzt wird.
+  /* Größere Tablets (iPad, Surface Go): Größen wachsen mit dem Bildschirm
+     (vh = % der Höhe, vw = % der Breite), damit es bei jeder Skalierung passt.
      Das Galaxy Tab Active2 (ca. 960x576) bleibt bei den Werten oben. */
-  @media (orientation:landscape) and (min-width:1000px) and (min-height:690px){
-    .app{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-gap:14px;padding:14px}
-    .left>*+*,.right>*+*{margin-top:14px}
-    .grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-gap:14px}
-    .tile{border-radius:18px;padding:12px 14px}
-    .tile .name{font-size:26px;padding-right:52px}
-    .tile{justify-content:flex-start}
-    .tile .name{min-height:58px} /* 2 Zeilen reservieren: Preis rutscht unter den Zähler */
-    .tile .price{font-size:19px;margin-top:6px}
-    .tile .cnt{right:10px;top:10px;min-width:48px;height:48px;border-radius:24px;font-size:29px}
-    .tile .minus{right:10px;bottom:10px;width:62px;height:54px;line-height:54px;font-size:36px;border-radius:14px}
+  @media (orientation:landscape) and (min-width:1000px) and (min-height:600px){
+    .app{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-gap:1.8vh;padding:1.8vh}
+    .left>*+*,.right>*+*{margin-top:1.8vh}
+    .grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-gap:1.8vh}
+    .tile{border-radius:18px;padding:1.5vh 1.3vw;justify-content:flex-start}
+    /* 2 Zeilen reservieren: der Preis rutscht so unter den Zähler */
+    .tile .name{font-size:2.15vw;padding-right:6.6vh;min-height:7.4vh}
+    .tile .price{font-size:2.4vh;margin-top:0.8vh}
+    .tile .cnt{right:1.2vh;top:1.2vh;min-width:6.1vh;height:6.1vh;border-radius:3.1vh;font-size:3.7vh}
+    .tile .minus{right:1.2vh;bottom:1.2vh;width:7.8vh;height:6.8vh;line-height:6.8vh;font-size:4.6vh;border-radius:14px}
     .tile.on .price{padding-right:0}
 
-    .ret{border-radius:18px;padding:10px 14px}
-    .ret .lbl{font-size:23px}
-    .ret .lbl small{font-size:19px}
-    .ret button{width:84px;height:70px;font-size:38px;border-radius:14px}
-    .ret .num{min-width:70px;font-size:38px}
+    .ret{border-radius:18px;padding:1.2vh 1.3vw}
+    .ret .lbl{font-size:2.9vh}
+    .ret .lbl small{font-size:2.3vh}
+    .ret button{width:10vh;height:8.6vh;font-size:4.6vh;border-radius:14px}
+    .ret .num{min-width:8vh;font-size:4.6vh}
 
-    .head img{height:66px;margin-right:16px}
-    .head .ttl{font-size:29px}
-    .head .ttl small{font-size:21px}
-    .sum{border-radius:18px;padding:12px 18px}
-    .row{font-size:23px;padding:2px 0}
-    .total{margin-top:8px;padding-top:8px}
-    .total .t1{font-size:31px}
-    .total .t2{font-size:74px}
+    .head img{height:8.2vh;margin-right:1.5vw}
+    .head .ttl{font-size:3.6vh}
+    .head .ttl small{font-size:2.6vh}
+    .sum{border-radius:18px;padding:1.4vh 1.7vw}
+    .row{font-size:2.9vh;padding:0.2vh 0}
+    .total{margin-top:1vh;padding-top:1vh}
+    .total .t1{font-size:3.9vh}
+    .total .t2{font-size:9.2vh}
 
-    .money{grid-gap:12px}
-    .money button{height:82px;font-size:32px;border-radius:14px}
-    .change{border-radius:18px;padding:12px 14px 12px 20px}
-    .change .clr{width:82px;height:86px;font-size:32px;border-radius:14px}
-    .change .clr small{font-size:17px}
-    .change .g{font-size:25px}
-    .change .c{font-size:62px}
-    .change .c small{font-size:28px}
-    .change .notes,.change .bd{min-height:40px}
-    .change .notes span,.change .bd span{font-size:24px;padding:2px 11px;margin:0 8px 6px 0;border-radius:10px}
-    .change .notes em{font-size:24px;margin-right:10px}
+    .money{grid-gap:1.5vh}
+    /* Breite begrenzt die Schrift: sonst bricht "0,50 €" auf dem iPad um */
+    .money button{height:10.2vh;font-size:2.3vw;border-radius:14px;white-space:nowrap}
+    .change{border-radius:18px;padding:1.5vh 1.3vw 1.5vh 1.8vw}
+    .change .clr{width:10vh;height:10.6vh;font-size:4vh;border-radius:14px}
+    .change .clr small{font-size:2.1vh}
+    .change .g{font-size:3vh}
+    .change .c{font-size:5.2vw}
+    .change .c small{font-size:2.4vw}
+    .change .notes,.change .bd{min-height:5vh}
+    .change .notes span,.change .bd span{font-size:2.1vw;padding:0.2vh 1vw;margin:0 0.7vw 0.7vh 0;border-radius:10px}
+    .change .notes em{font-size:2.1vw;margin-right:0.9vw}
 
-    .bottom{grid-gap:12px}
-    .bottom button{height:86px;font-size:34px;border-radius:18px;padding:0 28px}
+    .bottom{grid-gap:1.5vh}
+    .bottom button{height:10.6vh;font-size:4.2vh;border-radius:18px;padding:0 2.5vw}
 
     .box{max-width:860px;padding:22px}
     .box h2{font-size:32px}
@@ -182,7 +185,7 @@
   <div class="left">
     <div class="head">
       <img id="logo" src="logo.png" alt="" onerror="this.style.display='none'">
-      <span class="ttl">Adventmarkt 2026<br><small>Rechenhilfe</small></span>
+      <span class="ttl">Adventmarkt 2026<br><small>Rechenhilfe <span class="ver">v22</span></small></span>
     </div>
     <div class="grid" id="grid"></div>
     <div class="ret">
