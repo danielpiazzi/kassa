@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#1b1412">
+<meta name="theme-color" content="#ffffff">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <title>Getränkekassa</title>
 <style>
   :root{
-    --bg:#1b1412; --panel:#2a201c; --panel2:#352823; --text:#fff7ee; --muted:#c9b8a8;
-    --accent:#e0a526; --red:#c8402f; --green:#3fa34d; --blue:#2f6fb0; --line:#4a3a33;
+    --bg:#ffffff; --panel:#f4f1ec; --panel2:#e8e2d9; --text:#1d1a17; --muted:#4f4740;
+    --accent:#d1202f; --red:#c62828; --green:#1e8a3a; --blue:#1f4e9c; --line:#d6cec3;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;height:100%;background:var(--bg);color:var(--text);
@@ -20,75 +20,80 @@
   button{font:inherit;color:inherit;border:0;cursor:pointer;touch-action:manipulation}
   button:active{transform:scale(.97);filter:brightness(1.15)}
 
-  .app{display:grid;grid-template-columns:1.35fr 1fr;gap:10px;height:100%;padding:10px}
+  .app{display:grid;grid-template-columns:1fr 1.2fr;gap:10px;height:100%;padding:10px}
   .left{display:flex;flex-direction:column;gap:10px;min-height:0}
   .grid{flex:1;display:grid;grid-template-columns:repeat(2,1fr);grid-auto-rows:1fr;gap:10px;min-height:0}
   .tile{position:relative;border-radius:14px;padding:10px 12px;text-align:left;
     display:flex;flex-direction:column;justify-content:space-between;
-    background:var(--panel2);border:2px solid transparent;min-height:0}
-  .tile.on{border-color:var(--accent)}
-  .tile .name{font-size:clamp(17px,2.4vw,26px);font-weight:700;line-height:1.1}
-  .tile .price{font-size:clamp(14px,1.8vw,19px);color:var(--muted)}
-  .tile .cnt{position:absolute;right:10px;top:8px;min-width:46px;height:46px;border-radius:23px;
-    background:var(--accent);color:#1b1412;font-size:26px;font-weight:800;
+    background:var(--panel);border:2px solid var(--line);min-height:0}
+  .tile.on{border:3px solid var(--accent);background:#fdeeee}
+  .tile .name{font-size:clamp(16px,2.1vw,22px);font-weight:700;line-height:1.1;padding-right:44px}
+  .tile .price{font-size:clamp(14px,1.7vw,17px);color:var(--muted)}
+  .tile .cnt{position:absolute;right:8px;top:8px;min-width:40px;height:40px;border-radius:20px;
+    background:var(--accent);color:#fff;font-size:24px;font-weight:800;
     display:none;align-items:center;justify-content:center;padding:0 8px}
   .tile.on .cnt{display:flex}
   .tile .minus{position:absolute;right:8px;bottom:8px;width:52px;height:44px;border-radius:10px;
-    background:rgba(0,0,0,.35);font-size:30px;font-weight:700;display:none;line-height:44px;text-align:center}
+    background:rgba(0,0,0,.1);font-size:30px;font-weight:700;display:none;line-height:44px;text-align:center}
   .tile.on .minus{display:block}
+  .tile.on .price{padding-right:58px}
 
   .ret{display:flex;align-items:center;gap:10px;background:var(--panel);border-radius:14px;padding:8px 10px}
   .ret .lbl{flex:1;font-size:clamp(16px,2vw,22px);font-weight:700}
-  .ret .lbl small{display:block;font-weight:400;color:var(--muted);font-size:14px}
+  .ret .lbl small{display:block;font-weight:400;color:var(--muted);font-size:16px}
   .ret button{width:64px;height:56px;border-radius:12px;font-size:30px;font-weight:800}
-  .ret .rm{background:var(--panel2)} .ret .add{background:var(--blue)}
+  .ret .rm{background:var(--panel2)} .ret .add{background:var(--blue);color:#fff}
   .ret .num{min-width:44px;text-align:center;font-size:30px;font-weight:800}
 
   .right{display:flex;flex-direction:column;gap:10px;min-height:0}
   .head{display:flex;align-items:center;gap:10px}
-  .head img{height:clamp(48px,11vh,72px);background:#fff;border-radius:10px;padding:4px 10px}
-  .head .ttl{font-size:18px;font-weight:700;line-height:1.15}
-  .head .ttl small{font-size:14px;font-weight:400;color:var(--muted)}
+  .head img{height:clamp(44px,9vh,60px)}
+  .head .ttl{font-size:22px;font-weight:700;line-height:1.15}
+  .head .ttl small{font-size:17px;font-weight:400;color:var(--muted)}
   .sum{background:var(--panel);border-radius:14px;padding:10px 14px}
-  .row{display:flex;justify-content:space-between;font-size:17px;color:var(--muted);padding:1px 0}
+  .row{display:flex;justify-content:space-between;font-size:clamp(17px,2.2vw,21px);color:var(--muted);padding:1px 0}
   .total{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--line);
     margin-top:6px;padding-top:6px}
-  .total .t1{font-size:20px;font-weight:700}
-  .total .t2{font-size:clamp(34px,5vw,52px);font-weight:800;color:var(--accent)}
-  .total.payout .t2{color:#6fc3ff}
+  .total .t1{font-size:24px;font-weight:700}
+  .total .t2{font-size:clamp(40px,6.5vw,64px);font-weight:800;color:var(--accent)}
+  .total.payout .t2{color:var(--blue)}
 
   .money{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-  .money button{height:clamp(46px,8vh,62px);border-radius:12px;background:var(--panel2);font-size:22px;font-weight:700}
-  .money .exact{background:var(--green);grid-column:span 2}
-  .money .clr{background:#5a4038}
-
-  .change{background:var(--panel);border-radius:14px;padding:8px 14px;flex:1;
-    display:flex;flex-direction:column;justify-content:center;min-height:0}
-  .change .g{font-size:17px;color:var(--muted)}
-  .change .c{font-size:clamp(30px,5vw,50px);font-weight:800}
-  .change .c.ok{color:#7be08a} .change .c.miss{color:#ff8a7a}
+  .money button{height:clamp(50px,9.5vh,72px);border-radius:12px;background:var(--panel2);font-size:26px;font-weight:700}
+  .money .exact{background:var(--green);color:#fff;grid-column:span 2}
+  .change{background:var(--panel);border-radius:14px;padding:8px 10px 8px 14px;flex:1;
+    display:flex;align-items:center;gap:8px;min-height:0}
+  .change .cl{flex:1;min-width:0}
+  .change .clr{background:var(--panel2);border-radius:12px;width:74px;height:66px;font-size:24px;font-weight:800;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+  .change .clr small{font-size:14px;font-weight:600;margin-top:4px}
+  .change .g{font-size:clamp(18px,2.4vw,22px);color:var(--muted)}
+  .change .c{font-size:clamp(36px,6vw,58px);font-weight:800;white-space:nowrap;line-height:1.1}
+  .change .c small{font-size:.45em;font-weight:700}
+  .change .c.ok{color:var(--green)} .change .c.miss{color:var(--red)}
 
   .bottom{display:grid;grid-template-columns:auto auto 1fr;gap:8px}
-  .bottom button{height:clamp(54px,10vh,72px);border-radius:14px;font-size:22px;font-weight:800;padding:0 16px}
-  .b-reset{background:#5a4038} .b-menu{background:var(--panel2);font-size:26px!important}
-  .b-done{background:var(--green)}
+  .bottom button{height:clamp(56px,11vh,78px);border-radius:14px;font-size:26px;font-weight:800;padding:0 18px}
+  .b-reset{background:var(--panel2)} .b-menu{background:var(--panel2);font-size:28px!important}
+  .b-done{background:var(--green);color:#fff}
   .b-done:disabled{opacity:.35}
 
   /* Modals */
-  .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;padding:12px;z-index:10}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:12px;z-index:10}
   .modal.open{display:flex}
   .box{background:var(--panel);border-radius:16px;padding:16px;width:min(720px,100%);max-height:100%;overflow:auto}
-  .box h2{margin:0 0 10px;font-size:24px}
-  .box table{width:100%;border-collapse:collapse;font-size:18px}
+  .box{background:#fff}
+  .box h2{margin:0 0 10px;font-size:26px}
+  .box table{width:100%;border-collapse:collapse;font-size:20px}
   .box td,.box th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:left}
   .box td.r,.box th.r{text-align:right}
   .box .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
   .box .acts button{padding:12px 16px;border-radius:12px;background:var(--panel2);font-size:18px;font-weight:700}
-  .box .acts .pri{background:var(--green)} .box .acts .dng{background:var(--red)}
+  .box .acts .pri{background:var(--green);color:#fff} .box .acts .dng{background:var(--red);color:#fff}
   .box input{font:inherit;font-size:18px;background:var(--bg);color:var(--text);border:1px solid var(--line);
     border-radius:8px;padding:8px;width:100%;user-select:text;-webkit-user-select:text}
   .box input[type=checkbox]{width:26px;height:26px}
-  .note{color:var(--muted);font-size:15px;margin-top:8px}
+  .note{color:var(--muted);font-size:17px;margin-top:8px}
   .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--green);color:#fff;
     padding:12px 22px;border-radius:12px;font-size:20px;font-weight:700;opacity:0;transition:opacity .25s;pointer-events:none;z-index:20}
   .toast.show{opacity:1}
@@ -103,6 +108,10 @@
 <body>
 <div class="app">
   <div class="left">
+    <div class="head">
+      <img id="logo" src="logo.png" alt="" onerror="this.style.display='none'">
+      <span class="ttl">Adventmarkt 2026<br><small>Getränkekassa</small></span>
+    </div>
     <div class="grid" id="grid"></div>
     <div class="ret">
       <div class="lbl">Häferl zurück <small id="retInfo">Pfand wird abgezogen</small></div>
@@ -113,10 +122,6 @@
   </div>
 
   <div class="right">
-    <div class="head">
-      <img id="logo" src="logo.png" alt="" onerror="this.style.display='none'">
-      <span class="ttl">Adventmarkt 2026<br><small>Getränkekassa</small></span>
-    </div>
     <div class="sum">
       <div class="row"><span id="lDrinks">Getränke</span><span id="vDrinks">0,00 €</span></div>
       <div class="row"><span id="lPfand">+ Pfand</span><span id="vPfand">0,00 €</span></div>
@@ -129,12 +134,14 @@
       <button data-v="5">5 €</button><button data-v="10">10 €</button>
       <button data-v="20">20 €</button><button data-v="50">50 €</button>
       <button class="exact" id="exact">Passt genau</button>
-      <button class="clr" id="clrGiven" style="grid-column:span 2">Gegeben löschen</button>
     </div>
 
     <div class="change">
-      <div class="g" id="givenTxt">Gegeben: –</div>
-      <div class="c" id="changeTxt">&nbsp;</div>
+      <div class="cl">
+        <div class="g" id="givenTxt">Gegeben: –</div>
+        <div class="c" id="changeTxt">&nbsp;</div>
+      </div>
+      <button class="clr" id="clrGiven">✕<small>löschen</small></button>
     </div>
 
     <div class="bottom">
@@ -261,11 +268,11 @@
     if (given > 0){
       $("givenTxt").textContent = "Gegeben: " + eur(given);
       var diff = Math.round((given - Math.max(r.total,0))*100)/100;
-      if (diff >= 0){ ct.textContent = "Rückgeld " + eur(diff); ct.classList.add("ok"); }
-      else { ct.textContent = "Fehlt " + eur(-diff); ct.classList.add("miss"); }
+      if (diff >= 0){ ct.innerHTML = "<small>Rückgeld</small> " + eur(diff); ct.classList.add("ok"); }
+      else { ct.innerHTML = "<small>Fehlt</small> " + eur(-diff); ct.classList.add("miss"); }
     } else {
       $("givenTxt").textContent = "Gegeben: –";
-      ct.innerHTML = r.total < 0 ? "Auszahlen " + eur(-r.total) : "&nbsp;";
+      ct.innerHTML = r.total < 0 ? "<small>Auszahlen</small> " + eur(-r.total) : "&nbsp;";
     }
     $("doneBtn").disabled = (r.n === 0 && ret === 0);
   }

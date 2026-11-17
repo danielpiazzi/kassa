@@ -1,5 +1,5 @@
 // Offline-Cache: nach dem ersten Laden läuft die App ohne Internet.
-var CACHE = "kassa-v3";
+var CACHE = "kassa-v4";
 var FILES = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./logo.png"];
 
 self.addEventListener("install", function (e) {
