@@ -147,7 +147,7 @@
       <button data-v="0.5">0,50 €</button><button data-v="1">1 €</button><button data-v="2">2 €</button>
       <button data-v="5">5 €</button><button data-v="10">10 €</button>
       <button data-v="20">20 €</button><button data-v="50">50 €</button><button data-v="100">100 €</button>
-      <button class="exact" id="exact">Passt genau</button>
+      <button class="exact" id="amountBtn">Betrag …</button>
     </div>
 
     <div class="change">
@@ -205,6 +205,22 @@
     <button>4</button><button>5</button><button>6</button>
     <button>7</button><button>8</button><button>9</button>
     <button data-k="x">✕</button><button>0</button><button data-k="b">⌫</button>
+  </div>
+</div></div>
+
+<!-- Betrag eingeben -->
+<div class="modal" id="mAmt"><div class="box pinbox">
+  <h2>Gegebener Betrag</h2>
+  <div class="pindots" id="amtDisp" style="letter-spacing:0;font-weight:800">0 €</div>
+  <div class="pad" id="amtPad">
+    <button>1</button><button>2</button><button>3</button>
+    <button>4</button><button>5</button><button>6</button>
+    <button>7</button><button>8</button><button>9</button>
+    <button>,</button><button>0</button><button data-k="b">⌫</button>
+  </div>
+  <div class="pad" style="grid-template-columns:1fr 1fr;margin-top:8px">
+    <button data-close style="font-size:21px">Abbrechen</button>
+    <button id="amtOk" style="background:var(--green);color:#fff">OK</button>
   </div>
 </div></div>
 
@@ -338,7 +354,29 @@
   Array.prototype.forEach.call(document.querySelectorAll("#money [data-v]"), function(b){
     b.onclick = function(){ var v = +b.getAttribute("data-v"); given += v; notes.push(v); render(); };
   });
-  $("exact").onclick = function(){ var t = calc().total; given = t > 0 ? t : 0; notes = []; render(); };
+  // Betrag frei eingeben (Popup mit Ziffernfeld)
+  var amt = "";
+  function drawAmt(){ $("amtDisp").textContent = (amt || "0") + " €"; }
+  $("amountBtn").onclick = function(){ amt = ""; drawAmt(); open("mAmt"); };
+  Array.prototype.forEach.call(document.querySelectorAll("#amtPad button"), function(b){
+    b.onclick = function(){
+      var k = b.textContent;
+      if (b.getAttribute("data-k") === "b"){ amt = amt.slice(0, -1); }
+      else if (k === ","){ if (amt.indexOf(",") < 0) amt = (amt || "0") + ","; }
+      else {
+        var dec = amt.indexOf(",");
+        if (dec >= 0 && amt.length - dec > 2) return;   // max. 2 Nachkommastellen
+        if (dec < 0 && amt.replace(/^0+/, "").length >= 4) return; // max. 9999 €
+        amt = (amt === "0" ? "" : amt) + k;
+      }
+      drawAmt();
+    };
+  });
+  $("amtOk").onclick = function(){
+    var v = Math.round(parseFloat((amt || "0").replace(",", ".")) * 100) / 100;
+    closeAll();
+    if (v > 0){ given = Math.round((given + v) * 100) / 100; notes.push(v); render(); }
+  };
   $("clrGiven").onclick = function(){ given = 0; notes = []; render(); };
   $("resetBtn").onclick = resetCurrent;
   $("doneBtn").onclick = function(){
