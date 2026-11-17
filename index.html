@@ -112,6 +112,64 @@
     padding:12px 22px;border-radius:12px;font-size:20px;font-weight:700;opacity:0;transition:opacity .25s;pointer-events:none;z-index:20}
   .toast.show{opacity:1}
 
+  /* Größere Tablets (iPad, Surface Go): alles größer, damit der Platz genutzt wird.
+     Das Galaxy Tab Active2 (ca. 960x576) bleibt bei den Werten oben. */
+  @media (orientation:landscape) and (min-width:1000px) and (min-height:690px){
+    .app{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-gap:14px;padding:14px}
+    .left>*+*,.right>*+*{margin-top:14px}
+    .grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-gap:14px}
+    .tile{border-radius:18px;padding:12px 14px}
+    .tile .name{font-size:26px;padding-right:52px}
+    .tile{justify-content:flex-start}
+    .tile .name{min-height:58px} /* 2 Zeilen reservieren: Preis rutscht unter den Zähler */
+    .tile .price{font-size:19px;margin-top:6px}
+    .tile .cnt{right:10px;top:10px;min-width:48px;height:48px;border-radius:24px;font-size:29px}
+    .tile .minus{right:10px;bottom:10px;width:62px;height:54px;line-height:54px;font-size:36px;border-radius:14px}
+    .tile.on .price{padding-right:0}
+
+    .ret{border-radius:18px;padding:10px 14px}
+    .ret .lbl{font-size:23px}
+    .ret .lbl small{font-size:19px}
+    .ret button{width:84px;height:70px;font-size:38px;border-radius:14px}
+    .ret .num{min-width:70px;font-size:38px}
+
+    .head img{height:66px;margin-right:16px}
+    .head .ttl{font-size:29px}
+    .head .ttl small{font-size:21px}
+    .sum{border-radius:18px;padding:12px 18px}
+    .row{font-size:23px;padding:2px 0}
+    .total{margin-top:8px;padding-top:8px}
+    .total .t1{font-size:31px}
+    .total .t2{font-size:74px}
+
+    .money{grid-gap:12px}
+    .money button{height:82px;font-size:32px;border-radius:14px}
+    .change{border-radius:18px;padding:12px 14px 12px 20px}
+    .change .clr{width:82px;height:86px;font-size:32px;border-radius:14px}
+    .change .clr small{font-size:17px}
+    .change .g{font-size:25px}
+    .change .c{font-size:62px}
+    .change .c small{font-size:28px}
+    .change .notes,.change .bd{min-height:40px}
+    .change .notes span,.change .bd span{font-size:24px;padding:2px 11px;margin:0 8px 6px 0;border-radius:10px}
+    .change .notes em{font-size:24px;margin-right:10px}
+
+    .bottom{grid-gap:12px}
+    .bottom button{height:86px;font-size:34px;border-radius:18px;padding:0 28px}
+
+    .box{max-width:860px;padding:22px}
+    .box h2{font-size:32px}
+    .box table{font-size:24px}
+    .box .acts button{font-size:22px;padding:16px 20px}
+    .box input{font-size:22px}
+    .note{font-size:20px}
+    .box.pinbox{max-width:440px}
+    .pindots{font-size:50px;height:64px;line-height:64px}
+    .pad{grid-gap:12px}
+    .pad button{height:80px;font-size:36px}
+    .toast{font-size:24px;padding:16px 28px}
+  }
+
   @media (orientation:portrait){
     html,body{overflow:auto}
     .app{grid-template-columns:1fr;height:auto;min-height:100%}
