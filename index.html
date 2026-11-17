@@ -20,15 +20,17 @@
   button{font:inherit;color:inherit;border:0;cursor:pointer;touch-action:manipulation}
   button:active{transform:scale(.97);filter:brightness(1.15)}
 
-  .app{display:grid;grid-template-columns:1fr 1.2fr;gap:10px;height:100%;padding:10px}
-  .left{display:flex;flex-direction:column;gap:10px;min-height:0}
-  .grid{flex:1;display:grid;grid-template-columns:repeat(2,1fr);grid-auto-rows:1fr;gap:10px;min-height:0}
+  /* Feste Größen statt clamp()/flex-gap: der Browser am Tablet ist alt und kennt die nicht */
+  .app{display:grid;grid-template-columns:1fr 1.2fr;grid-gap:10px;height:100%;padding:10px}
+  .left,.right{display:flex;flex-direction:column;min-height:0}
+  .left>*+*,.right>*+*{margin-top:10px}
+  .grid{flex:1;display:grid;grid-template-columns:repeat(2,1fr);grid-auto-rows:1fr;grid-gap:10px;min-height:0}
   .tile{position:relative;border-radius:14px;padding:10px 12px;text-align:left;
     display:flex;flex-direction:column;justify-content:space-between;
     background:var(--panel);border:2px solid var(--line);min-height:0}
   .tile.on{border:3px solid var(--accent);background:#fdeeee}
-  .tile .name{font-size:clamp(16px,2.1vw,22px);font-weight:700;line-height:1.1;padding-right:44px}
-  .tile .price{font-size:clamp(14px,1.7vw,17px);color:var(--muted)}
+  .tile .name{font-size:21px;font-weight:700;line-height:1.1;padding-right:44px}
+  .tile .price{font-size:16px;color:var(--muted)}
   .tile .cnt{position:absolute;right:8px;top:8px;min-width:40px;height:40px;border-radius:20px;
     background:var(--accent);color:#fff;font-size:24px;font-weight:800;
     display:none;align-items:center;justify-content:center;padding:0 8px}
@@ -38,57 +40,57 @@
   .tile.on .minus{display:block}
   .tile.on .price{padding-right:58px}
 
-  .ret{display:flex;align-items:center;gap:10px;background:var(--panel);border-radius:14px;padding:8px 10px}
-  .ret .lbl{flex:1;font-size:clamp(16px,2vw,22px);font-weight:700}
+  .ret{display:flex;align-items:center;background:var(--panel);border-radius:14px;padding:8px 10px}
+  .ret .lbl{flex:1;font-size:20px;font-weight:700}
   .ret .lbl small{display:block;font-weight:400;color:var(--muted);font-size:16px}
   .ret button{width:64px;height:56px;border-radius:12px;font-size:30px;font-weight:800}
   .ret .rm{background:var(--panel2)} .ret .add{background:var(--blue);color:#fff}
-  .ret .num{min-width:44px;text-align:center;font-size:30px;font-weight:800}
+  .ret .num{min-width:54px;text-align:center;font-size:30px;font-weight:800}
 
-  .right{display:flex;flex-direction:column;gap:10px;min-height:0}
-  .head{display:flex;align-items:center;gap:10px}
-  .head img{height:clamp(44px,9vh,60px)}
+  .head{display:flex;align-items:center}
+  .head img{height:50px;width:auto;margin-right:12px}
   .head .ttl{font-size:22px;font-weight:700;line-height:1.15}
   .head .ttl small{font-size:17px;font-weight:400;color:var(--muted)}
   .sum{background:var(--panel);border-radius:14px;padding:10px 14px}
-  .row{display:flex;justify-content:space-between;font-size:clamp(17px,2.2vw,21px);color:var(--muted);padding:1px 0}
+  .row{display:flex;justify-content:space-between;font-size:19px;color:var(--muted);padding:1px 0}
   .total{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--line);
     margin-top:6px;padding-top:6px}
   .total .t1{font-size:24px;font-weight:700}
-  .total .t2{font-size:clamp(40px,6.5vw,64px);font-weight:800;color:var(--accent)}
+  .total .t2{font-size:56px;font-weight:800;color:var(--accent);line-height:1.1}
   .total.payout .t2{color:var(--blue)}
 
-  .money{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-  .money button{height:clamp(50px,9.5vh,72px);border-radius:12px;background:var(--panel2);font-size:26px;font-weight:700}
-  .money .exact{background:var(--green);color:#fff;grid-column:span 2}
+  .money{display:grid;grid-template-columns:repeat(5,1fr);grid-gap:8px}
+  .money button{height:60px;border-radius:12px;background:var(--panel2);font-size:25px;font-weight:700;padding:0}
+  .money .exact{background:var(--green);color:#fff;grid-column:span 3}
   .change{background:var(--panel);border-radius:14px;padding:8px 10px 8px 14px;flex:1;
-    display:flex;align-items:center;gap:8px;min-height:0}
+    display:flex;align-items:center;min-height:0}
+  .change .clr{margin-left:8px}
   .change .cl{flex:1;min-width:0}
   .change .clr{background:var(--panel2);border-radius:12px;width:74px;height:66px;font-size:24px;font-weight:800;
     display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
   .change .clr small{font-size:14px;font-weight:600;margin-top:4px}
-  .change .g{font-size:clamp(18px,2.4vw,22px);color:var(--muted)}
-  .change .c{font-size:clamp(36px,6vw,58px);font-weight:800;white-space:nowrap;line-height:1.1}
-  .change .c small{font-size:.45em;font-weight:700}
+  .change .g{font-size:20px;color:var(--muted)}
+  .change .c{font-size:52px;font-weight:800;white-space:nowrap;line-height:1.1}
+  .change .c small{font-size:24px;font-weight:700}
   .change .c.ok{color:var(--green)} .change .c.miss{color:var(--red)}
 
-  .bottom{display:grid;grid-template-columns:auto auto 1fr;gap:8px}
-  .bottom button{height:clamp(56px,11vh,78px);border-radius:14px;font-size:26px;font-weight:800;padding:0 18px}
+  .bottom{display:grid;grid-template-columns:auto auto 1fr;grid-gap:8px}
+  .bottom button{height:66px;border-radius:14px;font-size:26px;font-weight:800;padding:0 18px}
   .b-reset{background:var(--panel2)} .b-menu{background:var(--panel2);font-size:28px!important}
   .b-done{background:var(--green);color:#fff}
   .b-done:disabled{opacity:.35}
 
   /* Modals */
-  .modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:12px;z-index:10}
+  .modal{position:fixed;top:0;right:0;bottom:0;left:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:12px;z-index:10}
   .modal.open{display:flex}
-  .box{background:var(--panel);border-radius:16px;padding:16px;width:min(720px,100%);max-height:100%;overflow:auto}
+  .box{background:var(--panel);border-radius:16px;padding:16px;width:100%;max-width:720px;max-height:100%;overflow:auto}
   .box{background:#fff}
   .box h2{margin:0 0 10px;font-size:26px}
   .box table{width:100%;border-collapse:collapse;font-size:20px}
   .box td,.box th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:left}
   .box td.r,.box th.r{text-align:right}
-  .box .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-  .box .acts button{padding:12px 16px;border-radius:12px;background:var(--panel2);font-size:18px;font-weight:700}
+  .box .acts{display:flex;flex-wrap:wrap;margin-top:14px}
+  .box .acts button{margin:0 8px 8px 0;padding:12px 16px;border-radius:12px;background:var(--panel2);font-size:18px;font-weight:700}
   .box .acts .pri{background:var(--green);color:#fff} .box .acts .dng{background:var(--red);color:#fff}
   .box input{font:inherit;font-size:18px;background:var(--bg);color:var(--text);border:1px solid var(--line);
     border-radius:8px;padding:8px;width:100%;user-select:text;-webkit-user-select:text}
@@ -132,7 +134,7 @@
     <div class="money" id="money">
       <button data-v="1">1 €</button><button data-v="2">2 €</button>
       <button data-v="5">5 €</button><button data-v="10">10 €</button>
-      <button data-v="20">20 €</button><button data-v="50">50 €</button>
+      <button data-v="20">20 €</button><button data-v="50">50 €</button><button data-v="100">100 €</button>
       <button class="exact" id="exact">Passt genau</button>
     </div>
 
@@ -170,7 +172,7 @@
   <table><thead><tr><th>Getränk</th><th style="width:110px">Preis €</th><th style="width:70px">Pfand</th><th style="width:50px"></th></tr></thead>
     <tbody id="setRows"></tbody></table>
   <div class="acts"><button id="addItem">+ Getränk</button></div>
-  <div style="margin-top:12px;display:flex;align-items:center;gap:10px;font-size:18px">
+  <div style="margin-top:12px;display:flex;align-items:center;font-size:18px">
     Pfand pro Häferl (€): <input id="setPfand" type="number" step="0.5" min="0" style="width:110px">
   </div>
   <div class="note">Gespeichert wird nur auf diesem Tablet.</div>
