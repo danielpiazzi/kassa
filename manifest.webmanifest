@@ -1,6 +1,6 @@
 {
-  "name": "Getränkekassa",
-  "short_name": "Kassa",
+  "name": "Rechenhilfe Getränke",
+  "short_name": "Rechenhilfe",
   "start_url": "./index.html",
   "scope": "./",
   "display": "fullscreen",
