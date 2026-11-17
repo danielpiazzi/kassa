@@ -341,7 +341,19 @@
     return parts.join("");
   }
 
-  function resetCurrent(){ counts = counts.map(function(){ return 0; }); ret = 0; given = 0; notes = []; render(); }
+  function resetCurrent(){ counts = counts.map(function(){ return 0; }); ret = 0; given = 0; notes = []; render(); laterMaybeReload(); }
+
+  // Neue Version bereit → erst neu laden, wenn nichts eingetippt und kein Fenster offen ist
+  var pendingReload = false, reloaded = false;
+  function isIdle(){
+    var r = calc();
+    return r.n === 0 && ret === 0 && given === 0 && !document.querySelector(".modal.open");
+  }
+  function maybeReload(){
+    if (pendingReload && !reloaded && isIdle()){ reloaded = true; location.reload(); }
+  }
+  // verzögert, damit z. B. „OK“ im Betragsfeld zuerst den Betrag übernimmt
+  function laterMaybeReload(){ setTimeout(maybeReload, 0); }
 
   function toast(msg){
     var t = $("toast"); t.textContent = msg; t.classList.add("show");
@@ -392,7 +404,7 @@
 
   // Modals
   function open(id){ $(id).classList.add("open"); }
-  function closeAll(){ Array.prototype.forEach.call(document.querySelectorAll(".modal"), function(m){ m.classList.remove("open"); }); }
+  function closeAll(){ Array.prototype.forEach.call(document.querySelectorAll(".modal"), function(m){ m.classList.remove("open"); }); laterMaybeReload(); }
   Array.prototype.forEach.call(document.querySelectorAll("[data-close]"), function(b){ b.onclick = closeAll; });
 
   function renderStats(){
@@ -512,13 +524,15 @@
   document.addEventListener("click", function once(){ keepAwake(); document.removeEventListener("click", once); });
 
   if ("serviceWorker" in navigator && location.protocol.indexOf("http") === 0){
-    // Neue Version übernommen → einmal neu laden, aber nur wenn gerade nichts eingetippt ist
-    var hadCtrl = !!navigator.serviceWorker.controller, reloaded = false;
+    // Neuer Service Worker übernommen, oder er meldet eine geänderte App → neu laden sobald frei
+    var hadCtrl = !!navigator.serviceWorker.controller;
     navigator.serviceWorker.addEventListener("controllerchange", function(){
-      var r = calc();
-      if (hadCtrl && !reloaded && r.n === 0 && ret === 0 && given === 0){ reloaded = true; location.reload(); }
+      if (hadCtrl){ pendingReload = true; maybeReload(); }
     });
-    navigator.serviceWorker.register("sw.js").then(function(reg){ reg.update(); }).catch(function(){});
+    navigator.serviceWorker.addEventListener("message", function(e){
+      if (e.data === "updated"){ pendingReload = true; maybeReload(); }
+    });
+    navigator.serviceWorker.register("sw.js").catch(function(){});
   }
 
   buildGrid(); render();
