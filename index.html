@@ -117,7 +117,7 @@
     </div>
     <div class="grid" id="grid"></div>
     <div class="ret">
-      <div class="lbl">Häferl zurück <small id="retInfo">Pfand wird abgezogen</small></div>
+      <div class="lbl">Tasse/Glas/Flasche zurück <small id="retInfo">Pfand wird abgezogen</small></div>
       <button class="rm" id="retMinus">−</button>
       <div class="num" id="retNum">0</div>
       <button class="add" id="retPlus">+</button>
@@ -175,7 +175,7 @@
     <tbody id="setRows"></tbody></table>
   <div class="acts"><button id="addItem">+ Getränk</button></div>
   <div style="margin-top:12px;display:flex;align-items:center;font-size:18px">
-    Pfand pro Häferl (€): <input id="setPfand" type="number" step="0.5" min="0" style="width:110px">
+    Pfand pro Tasse/Glas/Flasche (€): <input id="setPfand" type="number" step="0.5" min="0" style="width:110px">
   </div>
   <div class="note">Gespeichert wird nur auf diesem Tablet.</div>
   <div class="acts">
@@ -258,9 +258,9 @@
     var r = calc();
     $("lDrinks").textContent = r.n + " Getränk" + (r.n === 1 ? "" : "e");
     $("vDrinks").textContent = eur(r.drinks);
-    $("lPfand").textContent = "+ Pfand (" + r.cups + " Häferl)";
+    $("lPfand").textContent = "+ Pfand (" + r.cups + " Stück)";
     $("vPfand").textContent = eur(r.pfand);
-    $("lRet").textContent = "− Rückgabe (" + ret + " Häferl)";
+    $("lRet").textContent = "− Rückgabe (" + ret + " Stück)";
     $("vRet").textContent = eur(-r.ret);
 
     var tb = $("totalBox");
@@ -340,9 +340,9 @@
     if (!order.length) h += '<tr><td colspan="3" style="color:var(--muted)">Noch keine Verkäufe</td></tr>';
     h += '<tr><th>Getränke gesamt</th><th></th><th class="r">'+eur(drinkSum)+'</th></tr></tbody></table>';
     h += '<table style="margin-top:12px"><tbody>'+
-      '<tr><td>Häferl ausgegeben</td><td class="r">'+cupsOut+'</td></tr>'+
-      '<tr><td>Häferl zurück</td><td class="r">'+cupsBack+'</td></tr>'+
-      '<tr><td>Häferl noch draußen</td><td class="r">'+(cupsOut-cupsBack)+'</td></tr>'+
+      '<tr><td>Tassen/Gläser/Flaschen ausgegeben</td><td class="r">'+cupsOut+'</td></tr>'+
+      '<tr><td>Tassen/Gläser/Flaschen zurück</td><td class="r">'+cupsBack+'</td></tr>'+
+      '<tr><td>Tassen/Gläser/Flaschen noch draußen</td><td class="r">'+(cupsOut-cupsBack)+'</td></tr>'+
       '<tr><td>Pfand-Saldo (in der Kassa)</td><td class="r">'+eur(cash - drinkSum)+'</td></tr>'+
       '<tr><th>Soll in der Kassa (ohne Wechselgeld)</th><th class="r">'+eur(cash)+'</th></tr>'+
       '<tr><td>Buchungen</td><td class="r">'+sales.length+'</td></tr></tbody></table>';
@@ -353,7 +353,7 @@
   $("undoBtn").onclick = function(){
     if (!sales.length) return;
     var s = sales[sales.length-1];
-    var desc = s.lines.map(function(l){ return l.n+"× "+l.name; }).join(", ") + (s.ret ? (s.lines.length?", ":"") + s.ret + " Häferl zurück" : "");
+    var desc = s.lines.map(function(l){ return l.n+"× "+l.name; }).join(", ") + (s.ret ? (s.lines.length?", ":"") + s.ret + " Tasse/Glas/Flasche zurück" : "");
     if (confirm("Letzte Buchung stornieren?\n\n" + desc + "\nBetrag: " + eur(s.total))){
       sales.pop(); save(K_SALES, sales); renderStats(); toast("Storniert");
     }
