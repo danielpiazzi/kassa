@@ -72,10 +72,11 @@
   .change .g{font-size:20px;color:var(--muted)}
   .change .c{font-size:52px;font-weight:800;white-space:nowrap;line-height:1.1}
   .change .c small{font-size:24px;font-weight:700}
-  .change .notes{white-space:nowrap;overflow:hidden;height:30px}
-  .change .notes span{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:8px;
+  .change .notes,.change .bd{white-space:nowrap;overflow:hidden;min-height:30px}
+  .change .notes span,.change .bd span{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:8px;
     padding:1px 8px;margin:0 6px 4px 0;font-size:18px;font-weight:700}
-  .change .bd{font-size:20px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden}
+  .change .bd span{border-color:var(--green);color:var(--green)}
+  .change .notes em{font-style:normal;font-size:18px;color:var(--muted);margin-right:8px}
   .change .c.ok{color:var(--green)} .change .c.miss{color:var(--red)}
 
   .bottom{display:grid;grid-template-columns:auto 1fr;grid-gap:8px}
@@ -290,18 +291,18 @@
 
     var ct = $("changeTxt");
     ct.className = "c";
-    $("breakTxt").textContent = "";
+    $("breakTxt").innerHTML = "";
     if (given > 0){
-      $("givenTxt").textContent = "Gegeben: " + eur(given);
-      // Getippte Scheine gruppiert, größte zuerst: „50 €  2× 20 €  1 €“
+      // Gegeben: getippte Scheine als Kästchen (gruppiert, größte zuerst) + Summe
       var grp = {}, vals = [];
       notes.forEach(function(v){ if (!grp[v]){ grp[v] = 0; vals.push(v); } grp[v]++; });
       vals.sort(function(a, b){ return b - a; });
-      $("notesTxt").innerHTML = notes.length
-        ? vals.map(function(v){ return "<span>" + (grp[v] > 1 ? grp[v] + "× " : "") + v + " €</span>"; }).join("")
-        : "<span>passend</span>";
+      $("givenTxt").textContent = "";
+      $("notesTxt").innerHTML = "<em>Gegeben</em>" + (notes.length
+        ? vals.map(function(v){ return chip(grp[v], v + " €"); }).join("")
+        : "<span>passend</span>") + "<em>= " + eur(given) + "</em>";
       var diff = Math.round((given - Math.max(r.total,0))*100)/100;
-      if (diff >= 0){ ct.innerHTML = "<small>Rückgeld</small> " + eur(diff); ct.classList.add("ok"); $("breakTxt").textContent = breakdown(diff); }
+      if (diff >= 0){ ct.innerHTML = "<small>Rückgeld</small> " + eur(diff); ct.classList.add("ok"); $("breakTxt").innerHTML = breakdown(diff); }
       else { ct.innerHTML = "<small>Fehlt</small> " + eur(-diff); ct.classList.add("miss"); }
     } else {
       $("givenTxt").textContent = "Gegeben: –";
@@ -312,14 +313,15 @@
   }
 
   // Rückgeld in Scheine aufteilen, Rest (Münzen) als Betrag
+  function chip(k, label){ return "<span>" + (k > 1 ? k + "× " : "") + label + "</span>"; }
   function breakdown(v){
     var cents = Math.round(v * 100), parts = [];
     [100, 50, 20, 10, 5].forEach(function(n){
       var k = Math.floor(cents / (n * 100));
-      if (k){ parts.push(k + "× " + n + " €"); cents -= k * n * 100; }
+      if (k){ parts.push(chip(k, n + " €")); cents -= k * n * 100; }
     });
-    if (cents) parts.push(eur(cents / 100) + " Münzen");
-    return parts.join("  ·  ");
+    if (cents) parts.push(chip(1, eur(cents / 100) + " Münzen"));
+    return parts.join("");
   }
 
   function resetCurrent(){ counts = counts.map(function(){ return 0; }); ret = 0; given = 0; notes = []; render(); }
