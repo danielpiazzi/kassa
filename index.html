@@ -72,6 +72,7 @@
   .change .g{font-size:20px;color:var(--muted)}
   .change .c{font-size:52px;font-weight:800;white-space:nowrap;line-height:1.1}
   .change .c small{font-size:24px;font-weight:700}
+  .change .bd{font-size:20px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden}
   .change .c.ok{color:var(--green)} .change .c.miss{color:var(--red)}
 
   .bottom{display:grid;grid-template-columns:auto auto 1fr;grid-gap:8px}
@@ -142,6 +143,7 @@
       <div class="cl">
         <div class="g" id="givenTxt">Gegeben: –</div>
         <div class="c" id="changeTxt">&nbsp;</div>
+        <div class="bd" id="breakTxt"></div>
       </div>
       <button class="clr" id="clrGiven">✕<small>löschen</small></button>
     </div>
@@ -267,16 +269,28 @@
 
     var ct = $("changeTxt");
     ct.className = "c";
+    $("breakTxt").textContent = "";
     if (given > 0){
       $("givenTxt").textContent = "Gegeben: " + eur(given);
       var diff = Math.round((given - Math.max(r.total,0))*100)/100;
-      if (diff >= 0){ ct.innerHTML = "<small>Rückgeld</small> " + eur(diff); ct.classList.add("ok"); }
+      if (diff >= 0){ ct.innerHTML = "<small>Rückgeld</small> " + eur(diff); ct.classList.add("ok"); $("breakTxt").textContent = breakdown(diff); }
       else { ct.innerHTML = "<small>Fehlt</small> " + eur(-diff); ct.classList.add("miss"); }
     } else {
       $("givenTxt").textContent = "Gegeben: –";
       ct.innerHTML = r.total < 0 ? "<small>Auszahlen</small> " + eur(-r.total) : "&nbsp;";
     }
     $("doneBtn").disabled = (r.n === 0 && ret === 0);
+  }
+
+  // Rückgeld in Scheine aufteilen, Rest (Münzen) als Betrag
+  function breakdown(v){
+    var cents = Math.round(v * 100), parts = [];
+    [100, 50, 20, 10, 5].forEach(function(n){
+      var k = Math.floor(cents / (n * 100));
+      if (k){ parts.push(k + "× " + n + " €"); cents -= k * n * 100; }
+    });
+    if (cents) parts.push((parts.length ? "+ " : "") + eur(cents / 100) + " Münzen");
+    return parts.join("  ·  ");
   }
 
   function resetCurrent(){ counts = counts.map(function(){ return 0; }); ret = 0; given = 0; render(); }
