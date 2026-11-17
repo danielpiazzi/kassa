@@ -1,5 +1,5 @@
 // Offline-Cache: nach dem ersten Laden läuft die App ohne Internet.
-var CACHE = "kassa-v2";
+var CACHE = "kassa-v3";
 var FILES = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./logo.png"];
 
 self.addEventListener("install", function (e) {
@@ -21,9 +21,14 @@ self.addEventListener("fetch", function (e) {
   if (e.request.method !== "GET") return;
   e.respondWith(
     fetch(e.request).then(function (r) {
+      // Nur gültige Antworten übernehmen – bei 404 (Seite offline genommen)
+      // oder WLAN-Anmeldeseiten bleibt die gespeicherte App aktiv.
+      if (!r.ok || r.redirected) throw new Error("bad response");
       var copy = r.clone();
       caches.open(CACHE).then(function (c) { c.put(e.request, copy); });
       return r;
-    }).catch(function () { return caches.match(e.request); })
+    }).catch(function () {
+      return caches.match(e.request).then(function (m) { return m || caches.match("./index.html"); });
+    })
   );
 });
