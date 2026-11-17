@@ -75,7 +75,13 @@
   .change .bd{font-size:20px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden}
   .change .c.ok{color:var(--green)} .change .c.miss{color:var(--red)}
 
-  .bottom{display:grid;grid-template-columns:auto auto 1fr;grid-gap:8px}
+  .bottom{display:grid;grid-template-columns:auto 1fr;grid-gap:8px}
+  /* PIN-Feld */
+  .box.pinbox{max-width:340px;text-align:center}
+  .pindots{font-size:40px;letter-spacing:14px;height:52px;line-height:52px}
+  .pindots.bad{color:var(--red)}
+  .pad{display:grid;grid-template-columns:repeat(3,1fr);grid-gap:8px}
+  .pad button{height:62px;font-size:28px;font-weight:700;border-radius:12px;background:var(--panel2)}
   .bottom button{height:66px;border-radius:14px;font-size:26px;font-weight:800;padding:0 18px}
   .b-reset{background:var(--panel2)} .b-menu{background:var(--panel2);font-size:28px!important}
   .b-done{background:var(--green);color:#fff}
@@ -149,7 +155,6 @@
     </div>
 
     <div class="bottom">
-      <button class="b-menu" id="menuBtn" aria-label="Menü">☰</button>
       <button class="b-reset" id="resetBtn">Neu</button>
       <button class="b-done" id="doneBtn">Fertig ✓</button>
     </div>
@@ -182,6 +187,18 @@
     <button class="pri" id="saveSettings">Speichern</button>
     <button data-close>Abbrechen</button>
     <button id="defaults">Standardpreise</button>
+  </div>
+</div></div>
+
+<!-- PIN -->
+<div class="modal" id="mPin"><div class="box pinbox">
+  <h2>PIN eingeben</h2>
+  <div class="pindots" id="pinDots"></div>
+  <div class="pad" id="pinPad">
+    <button>1</button><button>2</button><button>3</button>
+    <button>4</button><button>5</button><button>6</button>
+    <button>7</button><button>8</button><button>9</button>
+    <button data-k="x">✕</button><button>0</button><button data-k="b">⌫</button>
   </div>
 </div></div>
 
@@ -349,7 +366,41 @@
     $("statsBody").innerHTML = h;
     $("undoBtn").disabled = !sales.length;
   }
-  $("menuBtn").onclick = function(){ renderStats(); open("mStats"); };
+  // Statistik versteckt: Doppeltipp auf „Adventmarkt“ oben links, dann PIN
+  // Nur der Hash der PIN steht im Code (SHA-256 von "pfadi-rankweil:" + PIN)
+  var PIN_HASH = "f126bebe3267bafc8a4282206a40966b020ed8c1e34d142a6eb5213ba207fedd", pin = "", lastTap = 0;
+  function sha256hex(txt){
+    var data = new TextEncoder().encode(txt);
+    return crypto.subtle.digest("SHA-256", data).then(function(buf){
+      return Array.prototype.map.call(new Uint8Array(buf), function(b){ return ("0" + b.toString(16)).slice(-2); }).join("");
+    });
+  }
+  function showPin(){ pin = ""; drawPin(); open("mPin"); }
+  function drawPin(bad){
+    var d = $("pinDots");
+    d.className = "pindots" + (bad ? " bad" : "");
+    d.textContent = bad ? "falsch" : (pin ? new Array(pin.length + 1).join("●") : "");
+  }
+  document.querySelector(".head").addEventListener("click", function(){
+    var now = Date.now();
+    if (now - lastTap < 450){ lastTap = 0; showPin(); } else lastTap = now;
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("#pinPad button"), function(b){
+    b.onclick = function(){
+      var k = b.getAttribute("data-k");
+      if (k === "x"){ closeAll(); return; }
+      if (k === "b"){ pin = pin.slice(0, -1); drawPin(); return; }
+      if (pin.length >= 4) return;
+      pin += b.textContent; drawPin();
+      if (pin.length === 4){
+        var tryPin = pin; pin = "";
+        sha256hex("pfadi-rankweil:" + tryPin).then(function(h){
+          if (h === PIN_HASH){ closeAll(); renderStats(); open("mStats"); }
+          else { drawPin(true); setTimeout(function(){ drawPin(); }, 900); }
+        });
+      }
+    };
+  });
   $("undoBtn").onclick = function(){
     if (!sales.length) return;
     var s = sales[sales.length-1];
