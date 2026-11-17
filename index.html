@@ -61,7 +61,7 @@
 
   .money{display:grid;grid-template-columns:repeat(5,1fr);grid-gap:8px}
   .money button{height:60px;border-radius:12px;background:var(--panel2);font-size:25px;font-weight:700;padding:0}
-  .money .exact{background:var(--green);color:#fff;grid-column:span 3}
+  .money .exact{background:var(--green);color:#fff;grid-column:span 2}
   .change{background:var(--panel);border-radius:14px;padding:8px 10px 8px 14px;flex:1;
     display:flex;align-items:center;min-height:0}
   .change .clr{margin-left:8px}
@@ -144,7 +144,7 @@
     </div>
 
     <div class="money" id="money">
-      <button data-v="1">1 €</button><button data-v="2">2 €</button>
+      <button data-v="0.5">0,50 €</button><button data-v="1">1 €</button><button data-v="2">2 €</button>
       <button data-v="5">5 €</button><button data-v="10">10 €</button>
       <button data-v="20">20 €</button><button data-v="50">50 €</button><button data-v="100">100 €</button>
       <button class="exact" id="exact">Passt genau</button>
@@ -300,7 +300,7 @@
       vals.sort(function(a, b){ return b - a; });
       $("givenTxt").textContent = "";
       $("notesTxt").innerHTML = "<em>Gegeben</em>" + (notes.length
-        ? vals.map(function(v){ return chip(grp[v], v + " €"); }).join("")
+        ? vals.map(function(v){ return chip(grp[v], v % 1 ? eur(v) : v + " €"); }).join("")
         : "<span>passend</span>") + "<em>= " + eur(given) + "</em>";
       var diff = Math.round((given - Math.max(r.total,0))*100)/100;
       if (diff >= 0){ ct.innerHTML = "<small>Rückgeld</small> " + eur(diff); ct.classList.add("ok"); $("breakTxt").innerHTML = breakdown(diff); }
