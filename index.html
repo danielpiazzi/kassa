@@ -192,6 +192,70 @@
     .app{grid-template-columns:1fr;height:auto;min-height:100%}
     .grid{grid-auto-rows:110px}
   }
+
+  /* Handy hochkant: Kompaktansicht auf einem Bildschirm ohne Scrollen.
+     Statt der Geldscheine nur „Eingabe“ (Betrag eintippen). */
+  @media (orientation:portrait) and (max-width:600px){
+    html,body{overflow:hidden}
+    .app{display:flex;flex-direction:column;height:100%;padding:8px}
+    .left{flex:1 1 auto;min-height:0}
+    .right{flex:none;margin-top:8px}
+    .left>*+*,.right>*+*{margin-top:8px}
+    .grid{grid-auto-rows:1fr;grid-gap:8px}
+
+    .head img{height:30px;margin-right:8px}
+    .head .ttl{font-size:16px}
+    .head .ttl small{font-size:13px}
+    .head .ver{font-size:10px}
+
+    .tile{padding:6px 8px;border-radius:10px}
+    .tile .name{font-size:16px;padding-right:30px}
+    .tile .price{font-size:12px}
+    .tile .cnt{right:5px;top:5px;min-width:23px;height:23px;border-radius:12px;font-size:14px;padding:0 4px}
+    .tile .minus{right:5px;bottom:5px;width:36px;height:27px;line-height:27px;font-size:20px;border-radius:8px}
+    .tile.on .price{padding-right:40px}
+
+    .ret{padding:5px 8px;border-radius:10px}
+    .ret .lbl{font-size:15px}
+    .ret .lbl small{font-size:12px}
+    .ret button{width:48px;height:40px;font-size:24px;border-radius:10px}
+    .ret .num{min-width:36px;font-size:22px}
+
+    .sum{padding:6px 10px;border-radius:10px}
+    .row{font-size:13px;padding:0}
+    .total{margin-top:3px;padding-top:3px}
+    .total .t1{font-size:18px}
+    .total .t2{font-size:34px}
+
+    .money{grid-template-columns:1fr}
+    .money [data-v]{display:none}
+    .money .exact{grid-column:auto}
+    .money button{height:44px;font-size:21px;border-radius:10px}
+
+    .change{flex:none;height:80px;padding:4px 8px 4px 10px;border-radius:10px}
+    .change .g{font-size:15px}
+    .change .c{font-size:28px}
+    .change .c small{font-size:15px}
+    .change .notes,.change .bd{min-height:0}
+    .change .notes span,.change .bd span{font-size:13px;padding:0 6px;margin:0 4px 3px 0;border-radius:6px}
+    .change .notes em{font-size:13px;margin-right:5px}
+    .change .clr{width:52px;height:48px;font-size:18px;border-radius:10px}
+    .change .clr small{font-size:11px;margin-top:2px}
+
+    .bottom{grid-gap:6px}
+    .bottom button{height:50px;font-size:19px;padding:0 12px;border-radius:10px}
+    .rbar .info{font-size:15px}
+    .rbar .info small{font-size:12px}
+
+    .box{padding:12px}
+    .box h2{font-size:22px}
+    .pad button{height:56px;font-size:24px}
+  }
+  /* Sehr kleine Handys: Detailzeilen über „Zu zahlen“ weglassen */
+  @media (orientation:portrait) and (max-width:600px) and (max-height:640px){
+    .sum .row{display:none}
+    .total{border-top:0;margin-top:0;padding-top:0}
+  }
 </style>
 </head>
 <body>
@@ -199,7 +263,7 @@
   <div class="left">
     <div class="head">
       <img id="logo" src="logo.png" alt="" onerror="this.style.display='none'">
-      <span class="ttl">Adventmarkt 2026<br><small>Rechenhilfe <span class="ver">v24</span></small></span>
+      <span class="ttl">Adventmarkt 2026<br><small>Rechenhilfe <span class="ver">v25</span></small></span>
     </div>
     <div class="grid" id="grid"></div>
     <div class="ret">
