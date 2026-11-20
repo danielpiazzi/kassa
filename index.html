@@ -198,21 +198,26 @@
   @media (orientation:portrait) and (max-width:600px){
     html,body{overflow:hidden}
     .app{display:flex;flex-direction:column;height:100%;padding:8px}
-    .left{flex:1 1 auto;min-height:0}
-    .right{flex:none;margin-top:8px}
+    .left{flex:none}
+    .right{flex:1 1 auto;min-height:0;margin-top:8px}
     .left>*+*,.right>*+*{margin-top:8px}
-    .grid{grid-auto-rows:1fr;grid-gap:8px}
+    .grid{flex:none;grid-auto-rows:minmax(58px,auto);grid-gap:6px}
 
     .head img{height:30px;margin-right:8px}
     .head .ttl{font-size:16px}
     .head .ttl small{font-size:13px}
     .head .ver{font-size:10px}
 
-    .tile{padding:6px 8px;border-radius:10px}
-    .tile .name{font-size:16px;padding-right:30px}
-    .tile .price{font-size:12px}
-    .tile .cnt{right:5px;top:5px;min-width:23px;height:23px;border-radius:12px;font-size:14px;padding:0 4px}
-    .tile .minus{right:5px;bottom:5px;width:36px;height:27px;line-height:27px;font-size:20px;border-radius:8px}
+    /* Kachel: Name + kurzer Preis links, Anzahl vor dem Namen, Minus rechts mittig */
+    .tile{padding:5px 8px;border-radius:10px;justify-content:center}
+    .tile.on{border-width:2px}
+    .tile .name{font-size:15px;padding-right:0}
+    .tile.on .name{padding-right:40px}
+    .tile.on .name:before{content:attr(data-n) "× ";color:var(--accent)}
+    .tile .price{font-size:13px;margin-top:2px}
+    .tile .price .pf{display:none}
+    .tile .cnt,.tile.on .cnt{display:none}
+    .tile .minus{right:5px;top:50%;bottom:auto;margin-top:-17px;width:36px;height:34px;line-height:34px;font-size:22px;border-radius:8px}
     .tile.on .price{padding-right:40px}
 
     .ret{padding:5px 8px;border-radius:10px}
@@ -232,10 +237,10 @@
     .money .exact{grid-column:auto}
     .money button{height:44px;font-size:21px;border-radius:10px}
 
-    .change{flex:none;height:80px;padding:4px 8px 4px 10px;border-radius:10px}
-    .change .g{font-size:15px}
-    .change .c{font-size:28px}
-    .change .c small{font-size:15px}
+    .change{flex:1 1 auto;min-height:80px;padding:4px 8px 4px 10px;border-radius:10px}
+    .change .g{font-size:16px}
+    .change .c{font-size:32px}
+    .change .c small{font-size:16px}
     .change .notes,.change .bd{min-height:0}
     .change .notes span,.change .bd span{font-size:13px;padding:0 6px;margin:0 4px 3px 0;border-radius:6px}
     .change .notes em{font-size:13px;margin-right:5px}
@@ -251,6 +256,10 @@
     .box h2{font-size:22px}
     .pad button{height:56px;font-size:24px}
   }
+  @media (orientation:portrait) and (max-width:374px){
+    .tile .name{font-size:14px}
+    .tile .price{font-size:12px}
+  }
   /* Sehr kleine Handys: Detailzeilen über „Zu zahlen“ weglassen */
   @media (orientation:portrait) and (max-width:600px) and (max-height:640px){
     .sum .row{display:none}
@@ -263,7 +272,7 @@
   <div class="left">
     <div class="head">
       <img id="logo" src="logo.png" alt="" onerror="this.style.display='none'">
-      <span class="ttl">Adventmarkt 2026<br><small>Rechenhilfe <span class="ver">v25</span></small></span>
+      <span class="ttl">Adventmarkt 2026<br><small>Rechenhilfe <span class="ver">v26</span></small></span>
     </div>
     <div class="grid" id="grid"></div>
     <div class="ret">
@@ -423,7 +432,7 @@
       var b = document.createElement("button");
       b.className = "tile";
       b.innerHTML = '<span class="name">'+esc(it.name)+'</span>'+
-        '<span class="price">'+eur(it.price)+(it.pfand ? ' + '+eur(cfg.pfand).replace(" €","")+' Pfand' : '')+'</span>'+
+        '<span class="price">'+eur(it.price)+(it.pfand ? '<span class="pf"> + '+eur(cfg.pfand).replace(" €","")+' Pfand</span>' : '')+'</span>'+
         '<span class="cnt"></span><span class="minus">−</span>';
       b.addEventListener("click", function(e){
         if (e.target.classList.contains("minus")) { counts[i] = Math.max(0, counts[i]-1); }
@@ -440,6 +449,7 @@
     cfg.items.forEach(function(it, i){
       tiles[i].classList.toggle("on", counts[i] > 0);
       tiles[i].querySelector(".cnt").textContent = counts[i];
+      tiles[i].querySelector(".name").setAttribute("data-n", counts[i]); // Handy: „2× Glühwein“
     });
     $("retNum").textContent = ret;
     var r = calc();
